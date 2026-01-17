@@ -1,0 +1,239 @@
+<?php session_start(); ?>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>AyrimcilikYokTR | Minecraft Sunucumuz</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:#ffffff;
+  color:#000000;
+}
+header{
+  border-bottom:1px solid #ddd;
+  padding:20px;
+  text-align:center;
+}
+header h1{margin:0;font-size:28px;}
+header p{margin:5px 0 0;color:#444;}
+.container{max-width:900px;margin:40px auto;padding:0 20px;}
+.section{margin-bottom:50px;}
+.section h2{border-bottom:2px solid #000;display:inline-block;padding-bottom:5px;}
+.ip-box{
+  margin-top:20px;
+  padding:15px;
+  border:1px solid #000;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  max-width:400px;
+}
+.ip-box input{
+  flex:1;
+  padding:10px;
+  border:1px solid #000;
+  font-size:14px;
+}
+button{
+  padding:10px 16px;
+  border:1px solid #000;
+  background:#000;
+  color:#fff;
+  cursor:pointer;
+}
+button:hover{background:#333;}
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-top:20px;}
+.card{border:1px solid #000;padding:15px;nucumcursor:pointer;transition:background .2s}.card:hover{background:#f5f5f5}
+footer{border-top:1px solid #ddd;padding:20px;text-align:center;color:#555;}
+.login-box{border:1px solid #000;max-width:350px;padding:20px;margin-top:20px;}
+.login-box input{width:100%;padding:10px;margin-bottom:10px;border:1px solid #000;}
+</style>
+</head>
+<body>
+
+<!-- Giris Ekrani -->
+<div id="loginScreen" style="position:fixed;inset:0;background:#fff;display:flex;align-items:center;justify-content:center;z-index:9999;">
+  <div style="border:1px solid #000;padding:25px;max-width:320px;width:100%;text-align:center;">
+    <h2>Site Girisi</h2>
+    <input id="usernameInput" placeholder="Kullanici Adi" style="width:100%;padding:10px;margin-bottom:10px;border:1px solid #000;">
+
+    <label style="display:flex;align-items:center;gap:8px;font-size:14px;">
+      <input type="checkbox" id="robotCheck"> Ben robot degilim
+    </label>
+
+    <button style="width:100%;margin-top:15px;" onclick="enterSite()">Siteye Gir</button>
+    <p id="loginError" style="color:red;margin-top:10px;"></p>
+  </div>
+</div>
+
+<header>
+  <h1>AyrimcilikYokTR</h1>
+  <p>Minecraft Java Sunucusu • Surum 1.21</p>
+</header>
+
+<div class="container">
+
+  <div class="section">
+    <h2>Sunucumuzun Bilgileri</h2>
+    <div class="ip-box">
+      <input id="serverIp" type="text" value="ayrimcilikyoktr.aternos.me" readonly>
+      <button onclick="copyIP()">kopyala ip</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Neden AyrimcilikYokTR?</h2>
+    <div class="features">
+      <div class="card">Ayrimcilik yok, herkes esit</div>
+      <div class="card">Aktif ve eglenceli oyuncu kitlesi</div>
+      <div class="card">Surum 1.21 destekli</div>
+      <div class="card">Yeni baslayanlara dost sunucu</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Eglence Alanlari</h2>
+    <div class="features">
+      <div class="card" onclick="openModal('Gunluk Oduller','Her gun sunucuya giren oyunculara ozel oduller verilir. Kasa anahtari, esya ve surprizler kazanabilirsin.')">?? Gunluk Oduller<br><small>Tikla ve detaylari gor</small></div>
+      <div class="card" onclick="openModal('Mini Oyunlar','PvP, Parkur, Duel ve ozel etkinlik mini oyunlari ile eglence hic bitmez.')">?? Mini Oyunlar<br><small>Tikla ve detaylari gor</small></div>
+      <div class="card" onclick="openModal('Etkinlikler','Haftalik turnuvalar, moderator etkinlikleri ve buyuk oduller seni bekliyor.')">?? Etkinlikler<br><small>Tikla ve detaylari gor</small></div>
+      <div class="card" onclick="openModal('Sans Kutusu','Sansini dene, nadir esyalar ve ozel oduller kazan.')">?? Sans Kutusu<br><small>Tikla ve detaylari gor</small></div>
+    </div>
+  </div>
+  </div>
+
+  <div class="section">
+    <h2>Oyuncu Istatistikleri (Yakinda)</h2>
+    <div class="features">
+      <div class="card">?? Online Oyuncu<br><b>0</b></div>
+      <div class="card">?? Toplam Giris<br><b>5</b></div>
+      <div class="card">?? En Aktif Oyuncu<br><b>Scythest</b></div>
+    </div>
+  </div>
+  </div>
+
+  <div class="section">
+  <h2>Sunucu Hediye Carki (Her Cumartesi)</h2>
+  <p>Carki cevir, odul kazan! (Herkes 1 kere cevirebilir)</p>
+
+  <ul style="max-width:300px;margin:15px auto;text-align:left;">
+    <li>3X Demir (%70)</li>
+    <li>Elmas Kilic (%10)</li>
+    <li>4 Obsidyen (%10)</li>
+    <li>PAS (%9)</li>
+    <li>VIP (%1)</li>
+  </ul>
+
+  <div style="text-align:center;">
+    <div id="wheel">HEDIYE CARKI</div>
+    <button onclick="spinWheel()">Carki Cevir</button>
+    <p id="wheelResult"></p>
+  </div>
+
+  <div class="login-box">
+    <h3>Yetkili Girisi</h3>
+    <input id="adminUser" placeholder="Kullanici Adi">
+    <input id="adminPass" type="password" placeholder="Sifre">
+    <button onclick="adminLogin()">Erisim Al</button>
+    <p id="adminStatus"></p>
+  </div>
+</div>
+
+</div>
+
+<footer>
+  <div style="color:red;margin-bottom:10px;font-weight:bold;">
+    Sunucumuz Aksam 7-9 Arasi Online dir Girebilirsiniz Arkadaslar
+  </div>
+  © 2026 Tum Haklari Saklidir<br>
+  2026 Powered By Scythest-Sevket
+</footer>
+
+<div id="modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);">
+  <div style="background:#fff;color:#000;max-width:500px;margin:100px auto;padding:20px;border:1px solid #000;">
+    <h3 id="modalTitle"></h3>
+    <p id="modalText"></p>
+    <button onclick="closeModal()">Kapat</button>
+  </div>
+</div>
+
+<script>
+let spinCount = 0;
+let adminMode = false;
+
+function enterSite(){
+  const user = document.getElementById('usernameInput').value.trim();
+  const robot = document.getElementById('robotCheck').checked;
+  const error = document.getElementById('loginError');
+
+  if(!user){ error.innerText = 'Kullanici adi gir'; return; }
+  if(!robot){ error.innerText = 'Robot dogrulamayi isaretle'; return; }
+
+  const specialUsers = ['i3mb4er','scythest','harobrine','yrkald1545'];
+  let msg = 'Merhaba Oyuncu';
+
+  if(specialUsers.includes(user.toLowerCase())){
+    msg = 'Merhaba AS oyuncumuzdan birisiniz';
+  }
+
+  alert(msg);
+  document.getElementById('loginScreen').style.display = 'none';
+}
+
+function copyIP(){
+  const ip = document.getElementById("serverIp");
+  ip.select();
+  document.execCommand("copy");
+  alert("IP kopyalandi!");
+}
+
+function openModal(t,txt){
+  modal.style.display="block";
+  modalTitle.innerText=t;
+  modalText.innerText=txt;
+}
+function closeModal(){ modal.style.display="none"; }
+
+function adminLogin(){
+  const u = document.getElementById('adminUser').value;
+  const p = document.getElementById('adminPass').value;
+
+  if(u === 'scythest' && p === '1'){
+    adminMode = true;
+    document.getElementById('adminStatus').innerText = 'Yetkili erisimi acildi. Sinirsiz cark cevirebilirsin.';
+  }else{
+    document.getElementById('adminStatus').innerText = 'Hatali kullanici adi veya sifre';
+  }
+}
+
+function spinWheel(){
+  if(!adminMode && spinCount >= 1){
+    alert('Bu carki sadece 1 kere cevirebilirsin!');
+    return;
+  }
+
+  spinCount++;
+
+  const wheel=document.getElementById("wheel");
+  const res=document.getElementById("wheelResult");
+  const r=Math.random()*100;
+
+  wheel.style.transform=`rotate(${720+Math.random()*360}deg)`;
+  res.innerText="Cark donuyor...";
+
+  let text="",cmd="";
+  if(r<70){text="3X Demir";cmd="Sunucuda iken chete 3Xdemirverlaascythest yaz";}
+  else if(r<80){text="Elmas Kilic";cmd="Sunucuda iken chete Dia_swo yaz";}
+  else if(r<90){text="4 Obsidyen";cmd="Sunucuda iken chete 4obiverlascythest yaz";}
+  else if(r<99){text="PAS";cmd="Osuruk";}
+  else{text="VIP";cmd="Sunucuda iken chete JoBB_Vipo yaz";}
+
+  setTimeout(()=>{res.innerHTML=`<b>${text}</b><br><small>${cmd}</small>`;},2000);
+}
+</script>
+
+</body>
+</html>
